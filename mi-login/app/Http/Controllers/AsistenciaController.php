@@ -16,47 +16,48 @@ class AsistenciaController extends Controller
 {
     private const TOKEN_KEY = 'seguro_api_token';
 
+    /**
+     * Muestra el formulario principal inyectando los planes asignados al usuario en sesión.
+     */
     public function form()
     {
         $misPlanes = DB::table('usuario_planes')
             ->where('user_id', Auth::id())
-            ->get(); // Trae solo lo suyo
+            ->get(); 
 
         return view('asistencias.form', compact('misPlanes'));
     }
 
-    /** Olvida el token guardado (se usa al cambiar de escenario en la simulación). */
-    public function reiniciarToken(): JsonResponse
-    {
-        Cache::forget(self::TOKEN_KEY);
+    /* ELIMINADO: Se removió por completo el método reiniciarToken() de simulación */
 
-        return response()->json(['ok' => true]);
-    }
-
+    /**
+     * Retorna las categorías asociadas a un plan de asistencia tras validar permisos perimetrales.
+     */
     public function categorias(int $plan): JsonResponse
     {
-        // 1. OBTENER EL USUARIO QUE TIENE LA SESIÓN INICIADA
         $user = Auth::user();
 
-        // 2. VALIDAR SEGURIDAD LOCAL
-        // Comprobamos si el plan que introdujo existe en los servicios asociados a su cuenta corporativa o perfil
+        // VALIDACIÓN PERIMETRAL DE SEGURIDAD LOCAL
         $tieneAcceso = DB::table('usuario_planes')
             ->where('user_id', $user->id)
             ->where('assistance_plan_id', $plan)
             ->exists();
 
-        // Si intenta poner un ID que no le pertenece, bloqueamos la petición de inmediato
+        // Si se manipula el identificador desde la consola del navegador, se rechaza la consulta inmediatamente
         if (!$tieneAcceso) {
             return response()->json([
                 'message' => 'No tienes autorización para consultar este plan de asistencia.'
-            ], 403); // Código 403: Prohibido / Acceso Denegado
+            ], 403); 
         }
 
-        // 3. SI TODO ESTÁ BIEN, SE CONSULTA LA API
+        // CONSUMO DIRECTO AL ENDPOINT REAL DE PRODUCCIÓN
         return $this->proxy(fn() => $this->api('get', "/assistancecategories/{$plan}/assistanceplan"));
     }
 
-    /** POST /assistancecase */
+    /**
+     * Valida, procesa y despacha la estructura del payload hacia el endpoint de creación de casos.
+     * POST /asistencias
+     */
     public function crear(Request $request): JsonResponse
     {
         $d = $request->validate([
@@ -86,6 +87,7 @@ class AsistenciaController extends Controller
             'reference'           => 'nullable|string|max:255',
         ]);
 
+        // Sanitización e interpolación del nombre completo del afiliado
         $nombre = trim(implode(' ', array_filter([
             $d['first_name'],
             $d['middle_name'] ?? null,
@@ -93,7 +95,7 @@ class AsistenciaController extends Controller
             $d['last_name_2'] ?? null,
         ])));
 
-        // Misma estructura que el ejemplo de Swagger
+        // Mapeo estructurado requerido de forma estricta por el API gateway del proveedor
         $body = [
             'member' => [
                 'first_name'  => $d['first_name'],
@@ -130,7 +132,9 @@ class AsistenciaController extends Controller
 
     /* ------------------------------------------------------------------ */
 
-    /** Token de la API: se pide una vez y se reutiliza desde el caché. */
+    /**
+     * Gestiona las credenciales de la API. Cachea de forma automatizada el token por 50 minutos.
+     */
     private function token(bool $refresh = false): string
     {
         if ($refresh) {
@@ -139,14 +143,13 @@ class AsistenciaController extends Controller
 
         return Cache::remember(self::TOKEN_KEY, now()->addMinutes(50), function () {
             $res = Http::acceptJson()->timeout(20)->post($this->url('/ext/insurance/token'), [
-                // Si la API espera otros nombres de campo, cámbialos aquí.
                 'email'    => config('services.seguro.email'),
                 'password' => config('services.seguro.password'),
             ]);
 
             if ($res->failed()) {
                 $motivo = $res->json('message') ?? $res->json('error') ?? '';
-                throw new RuntimeException('No se pudo iniciar sesión en la API (HTTP ' . $res->status() . ')' . ($motivo ? ': ' . $motivo : '.'));
+                throw new RuntimeException('Error de comunicación con el nodo externo' . ($motivo ? ': ' . $motivo : '.'));
             }
 
             $json  = $res->json();
@@ -155,14 +158,16 @@ class AsistenciaController extends Controller
                 : trim($res->body(), "\" \n\r");
 
             if (! $token) {
-                throw new RuntimeException('La respuesta de la API no trae token.');
+                throw new RuntimeException('La respuesta de identidad no contiene firmas de acceso válidas.');
             }
 
             return $token;
         });
     }
 
-    /** Llama a la API con token; si responde 401 renueva el token y reintenta una vez. */
+    /**
+     * Interpola el token Bearer dinámico. Si el servidor retorna un error 401, refresca y reintenta en caliente.
+     */
     private function api(string $method, string $path, ?array $data = null): Response
     {
         $send = fn(string $token) => Http::withToken($token)->acceptJson()->timeout(20)
@@ -177,12 +182,17 @@ class AsistenciaController extends Controller
         return $res;
     }
 
+    /**
+     * Construye la URL base leyendo las variables de entorno inyectadas en la configuración corporativa.
+     */
     private function url(string $path): string
     {
         return rtrim((string) config('services.seguro.url'), '/') . $path;
     }
 
-    /** Devuelve al navegador lo que respondió la API (o un error claro). */
+    /**
+     * Centraliza el control de excepciones e impide la fuga de volcados brutos de código hacia el cliente público.
+     */
     private function proxy(callable $call): JsonResponse
     {
         try {
@@ -190,19 +200,19 @@ class AsistenciaController extends Controller
             $res = $call();
 
             $payload = $res->json() ?? ['message' => $res->body()];
+            
+            // Si el servicio externo falla y no provee un mensaje explícito, se formatea uno corporativo estándar
             if ($res->failed() && empty($payload['message'])) {
-                $payload['message'] = 'La API respondió ' . $res->status() . ': ' . mb_substr($res->body(), 0, 300);
+                $payload['message'] = 'Servicio central de asistencias temporalmente fuera de línea (HTTP ' . $res->status() . ').';
             }
 
             return response()->json($payload, $res->status());
         } catch (ConnectionException $e) {
             report($e);
-
-            return response()->json(['message' => 'No se pudo conectar con la API: ' . $e->getMessage()], 502);
+            return response()->json(['message' => 'No fue posible establecer conexión con la pasarela central de servicios externos.'], 502);
         } catch (RuntimeException $e) {
             report($e);
-
-            return response()->json(['message' => $e->getMessage()], 502);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 }
