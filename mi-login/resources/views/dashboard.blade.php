@@ -3,184 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avanta - Panel Principal</title>
-    
-    <!-- Configuración del Favicon corporativo para reemplazar el globito del navegador -->
+    <title>Avanta - Dashboard</title>
     <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
-    
     <style>
-        :root {
-            /* --- Colores Corporativos Oficiales (Pág. 15-16) --- */
-            --avanta-azul-profundo: #04114A;
-            --avanta-azul-electrico: #0F63FF;
-            --avanta-celeste: #2FE7FF;
-            --avanta-verde: #35FF57;
-            --avanta-blanco: #FFFFFF;
-
-            /* --- Colores de UI de Soporte (Mantenidos para legibilidad) --- */
-            --panel-bg: #111B54;      
-            --border-color: #2F3A75;  
-            --text-muted: #98A9C4;    
-
-            /* --- Tipografía (Pág. 18) --- */
-            --font-avanta: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-
-        * {
+        /* Estilos alineados al Brandbook de Avanta */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #F8FAFC;
+            color: #04114A;
+            /* Azul Profundo */
             margin: 0;
             padding: 0;
+        }
+
+        .navbar {
+            background-color: #04114A;
+            /* Azul Profundo */
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #FFFFFF;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: var(--font-avanta);
-            background-color: var(--avanta-azul-profundo);
-            color: var(--avanta-blanco);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
-        }
-
-        /* --- Contenedor de la Marca (Solo Isotipo a Gran Escala - Pág. 12) --- */
-        .brand-container {
-            position: absolute;
-            top: 40px;
-            left: 40px;
+        .navbar-brand {
             display: flex;
             align-items: center;
+            gap: 1px;
         }
 
-        /* Envoltura del enlace para aplicar la animación interactiva del logo */
-        .brand-container a {
-            display: inline-block;
-            transition: transform 0.2s ease-in-out;
-            will-change: transform;
-            line-height: 0;
-        }
-
-        /* Efecto hover: se agranda un toque sutil (aprox 2px) */
-        .brand-container a:hover {
-            transform: scale(1.025);
-        }
-
-        .brand-logo {
-            height: 84px; /* Sincronizado exactamente con el login y registro */
+        .navbar-brand img {
+            height: 60px;
             width: auto;
             display: block;
         }
 
-        /* --- Tarjeta Principal Compacta --- */
-        .dashboard-card {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 28px 32px; /* Reducido e idéntico a las vistas anteriores */
-            width: 100%;
-            max-width: 340px;   /* Sincronizado con el tamaño de las otras tarjetas */
-            text-align: center;
-        }
-
-        h1 {
-            /* Jerarquía para Títulos (Pág. 18): Helvetica Neue Bold */
-            font-size: 1.5rem; /* Ajustado proporcionalmente al nuevo tamaño de tarjeta */
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--avanta-blanco);
-        }
-
-        .welcome-text {
-            /* Jerarquía para Textos Continuos (Pág. 18): Helvetica Neue Light */
+        .navbar-brand span {
+            font-size: 25px;
             font-weight: 300;
-            color: var(--avanta-celeste);
-            font-size: 0.95rem;
-            margin-bottom: 24px;
+            color: #2FE7FF;
+            /* Celeste */
+            letter-spacing: 0.5px;
         }
 
-        .btn-action {
-            /* Jerarquía para Subtítulos/Acciones (Pág. 18): Helvetica Neue Medium */
-            display: inline-block;
-            width: 100%;
-            background-color: var(--avanta-azul-electrico);
-            color: var(--avanta-blanco);
+        .nav-right-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links-menu a {
+            color: #98A9C4;
             text-decoration: none;
-            padding: 12px;
-            border-radius: 8px;
+            font-size: 15px;
             font-weight: 500;
-            margin-bottom: 12px;
-            font-size: 0.95rem;
-            transition: background-color 0.3s ease;
+            transition: color 0.3s;
         }
 
-        .btn-action:hover {
-            /* Transición fluida hacia el tono Verde de crecimiento (Pág. 9, 15) */
-            background-color: var(--avanta-verde);
-            color: var(--avanta-azul-profundo);
+        .nav-links-menu a.active {
+            color: #2FE7FF;
+            /* Celeste activo */
             font-weight: 700;
         }
 
-        .logout-form {
-            margin-top: 4px;
+        .nav-links-menu a:hover {
+            color: #FFFFFF;
         }
 
         .btn-logout {
-            font-family: var(--font-avanta);
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            width: 100%;
-            padding: 11px;
-            border-radius: 8px;
-            font-weight: 300;
-            font-size: 0.95rem;
+            background: transparent;
+            border: 1px solid #2FE7FF;
+            /* Celeste */
+            color: #2FE7FF;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .btn-logout:hover {
-            border-color: var(--avanta-celeste);
-            color: var(--avanta-blanco);
-            background-color: rgba(47, 231, 255, 0.05);
+            background-color: #2FE7FF;
+            color: #04114A;
         }
 
-        /* Ajuste responsivo optimizado para el isotipo aislado */
-        @media (max-width: 768px) {
-            body {
-                justify-content: flex-start;
-                padding-top: 180px;
-            }
-            .brand-container {
-                position: absolute;
-                top: 35px;
-                left: 50%;
-                transform: translateX(-50%);
-            }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            margin-bottom: 30px;
+        }
+
+        .header-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .header-section p {
+            font-size: 16px;
+            color: #64748B;
+            margin: 0;
+        }
+
+        .table-responsive {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #F1F5F9;
+            color: #04114A;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 16px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #334155;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        .query-box {
+            background-color: #04114A;
+            color: #35FF57;
+            /* Verde Neón de código */
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-method {
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 4px;
+            color: white;
+            display: inline-block;
+        }
+
+        .bg-post {
+            background-color: #0F63FF;
+        }
+
+        .bg-get {
+            background-color: #16A34A;
+        }
+
+        /* 🛡️ ARREGLO DE PAGINACIÓN COMPACTA Y PEQUEÑA */
+        .pagination-wrapper {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pagination-wrapper ul.pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 6px;
+            gap: 5px;
+            margin: 0;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item span,
+        .pagination-wrapper ul.pagination li.page-item a {
+            display: block;
+            padding: 8px 14px;
+            font-size: 14px;
+            color: #04114A;
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item a:hover {
+            background-color: #F1F5F9;
+            border-color: #CBD5E1;
+            color: #0F63FF;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item.active span {
+            background-color: #0F63FF !important;
+            color: #FFFFFF !important;
+            border-color: #0F63FF !important;
+            font-weight: 700;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item.disabled span {
+            color: #94A3B8;
+            background-color: #F8FAFC;
+            border-color: #E2E8F0;
+            cursor: not-allowed;
+        }
+
+        /* 🚀 NUEVOS COMPONENTES ADAPTADOS PARA EL CONTENIDO DEL DASHBOARD */
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .dashboard-card {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+
+        .dashboard-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #04114A;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-avanta {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #0F63FF; /* Azul Eléctrico */
+            color: #FFFFFF;
+            border: 1px solid #0F63FF;
+        }
+
+        .btn-primary:hover {
+            background-color: #04114A; /* Azul Profundo */
+            border-color: #04114A;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #04114A;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-secondary:hover {
+            background-color: #F1F5F9;
+            border-color: #94A3B8;
+        }
+
+        .mode-badge {
+            background-color: #FFFBEB; /* Fondo ámbar suave de alerta */
+            color: #B45309;            /* Texto marrón de alerta */
+            border: 1px solid #FDE68A;
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+            width: 100%;
         }
     </style>
 </head>
 <body>
 
-    <!-- Identidad de Marca: El Isotipo limpio actúa como hipervínculo de retorno -->
-    <div class="brand-container">
-        <a href="{{ route('dashboard') }}">
-            <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Avanta Isotipo" class="brand-logo">
-        </a>
-    </div>
+    <!-- Nueva Navbar Unificada y Logotipo Ampliado -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Logotipo Avanta">
+            @role('admin') <span>| Panel</span> @endrole
+        </div>
+        
+        <div class="nav-right-container">
+            <div class="nav-links-menu">
+                <a href="{{ route('dashboard') }}" class="{{ Request::is('dashboard') ? 'active' : '' }}">Inicio</a>
+                @role('admin')
+                    <a href="{{ route('asistencias') }}">Solicitar Asistencia</a>
+                    <a href="{{ route('admin.usuarios') }}">Usuarios</a>
+                    <a href="{{ route('admin.bitacora') }}">Bitácora SQL</a>
+                @endrole
+            </div>
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
 
-    <!-- Contenido del Dashboard Compacto -->
-    <div class="dashboard-card">
-        <h1>Hola, {{ auth()->user()->name }} 👋</h1>
-        <p class="welcome-text">Ya estás dentro de Avanta.</p>
+    <!-- Área de Contenido Principal -->
+    <div class="main-content">
+        <div class="dashboard-card">
+            <h2>Hola, {{ Auth::user()->name }} 👋</h2>
 
-        <p><a href="{{ route('asistencias') }}" class="btn-action">Crear caso de asistencia</a></p>
-
-        <form method="POST" action="/logout" class="logout-form">
-            @csrf
-            <button type="submit" class="btn-logout">Cerrar sesión</button>
-        </form>
+            <div class="actions-container">
+                @role('admin')
+                    <a href="{{ route('asistencias') }}" class="btn-avanta btn-primary">
+                        Crear / Solicitar Asistencia
+                    </a>
+                    <a href="{{ route('admin.usuarios') }}" class="btn-avanta btn-secondary">
+                        Ir al Panel de Control
+                    </a>
+                @else
+                    <div class="mode-badge">
+                        Tu cuenta se encuentra en modo de lectura. Solicita autorización con el administrador para activar la creación de asistencias.
+                    </div>
+                @endrole
+            </div>
+        </div>
     </div>
 
 </body>

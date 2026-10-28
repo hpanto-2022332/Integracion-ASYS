@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avanta - Crear cuenta</title>
-    
+
     <!-- Configuración del Favicon corporativo para reemplazar el globito del navegador -->
     <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
-    
+
     <style>
         :root {
             /* --- Colores Corporativos Oficiales (Pág. 15-16) --- */
@@ -18,10 +19,10 @@
             --avanta-blanco: #FFFFFF;
 
             /* --- Colores de UI de Soporte --- */
-            --panel-bg: #111B54;      
-            --border-color: #2F3A75;  
-            --text-muted: #98A9C4;    
-            --error-color: #ff6b6b;   
+            --panel-bg: #111B54;
+            --border-color: #2F3A75;
+            --text-muted: #98A9C4;
+            --error-color: #ff6b6b;
 
             /* --- Tipografía (Pág. 18) --- */
             --font-avanta: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -63,13 +64,12 @@
             line-height: 0;
         }
 
-        /* Efecto hover: se agranda un toque sutil (aprox 2px) */
         .brand-container a:hover {
             transform: scale(1.025);
         }
 
         .brand-logo {
-            height: 84px; /* Sincronizado exactamente con la vista de login */
+            height: 84px;
             width: auto;
             display: block;
         }
@@ -81,7 +81,7 @@
             border-radius: 12px;
             padding: 28px 32px;
             width: 100%;
-            max-width: 340px; /* Ancho ajustado e idéntico al login */
+            max-width: 340px;
         }
 
         h1 {
@@ -106,7 +106,8 @@
 
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        select {
             width: 100%;
             padding: 10px 12px;
             background-color: rgba(4, 17, 74, 0.7);
@@ -121,9 +122,15 @@
 
         input[type="text"]:focus,
         input[type="email"]:focus,
-        input[type="password"]:focus {
+        input[type="password"]:focus,
+        select:focus {
             outline: none;
             border-color: var(--avanta-celeste);
+        }
+
+        select option {
+            background-color: var(--avanta-azul-profundo);
+            color: var(--avanta-blanco);
         }
 
         .btn-submit {
@@ -174,12 +181,12 @@
             text-decoration: underline;
         }
 
-        /* Ajuste responsivo optimizado para el isotipo */
         @media (max-width: 768px) {
             body {
                 justify-content: flex-start;
                 padding-top: 180px;
             }
+
             .brand-container {
                 position: absolute;
                 top: 35px;
@@ -189,6 +196,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Identidad de Marca: El Isotipo limpio actúa como hipervínculo de retorno -->
@@ -228,10 +236,20 @@
                 <input type="password" id="password_confirmation" name="password_confirmation" required>
             </div>
 
+            <div class="form-group">
+                <label for="pais">País de Operación</label>
+                <select name="pais" id="pais" required>
+                    <option value="Guatemala">Guatemala 🇬🇹</option>
+                    <option value="El Salvador">El Salvador 🇸🇻</option>
+                </select>
+                @error('pais') <p class="error-message">{{ $message }}</p> @enderror
+            </div>
+
             <button type="submit" class="btn-submit">Registrarme</button>
         </form>
 
         <p class="login-link">¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia sesión</a></p>
     </div>
 </body>
+
 </html>
