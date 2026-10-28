@@ -3,110 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Avanta - Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
     <style>
-        :root {
-            --bg-main: #111522;       /* Fondo azul muy oscuro */
-            --panel-bg: #1E263B;      /* Tarjeta principal */
-            --border-color: #303D59;  /* Bordes sutiles */
-            --text-muted: #536684;    /* Gris para texto secundario */
-            --accent-blue: #98A9C4;   /* Color destacado / Hover */
-            --text-light: #DCE3EF;    /* Color de texto principal */
-        }
-
-        * {
+        /* Estilos alineados al Brandbook de Avanta */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #F8FAFC;
+            color: #04114A;
+            /* Azul Profundo */
             margin: 0;
             padding: 0;
+        }
+
+        .navbar {
+            background-color: #04114A;
+            /* Azul Profundo */
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #FFFFFF;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-light);
+        .navbar-brand {
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            gap: 1px;
         }
 
-        .dashboard-card {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 40px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            text-align: center;
+        .navbar-brand img {
+            height: 60px;
+            width: auto;
+            display: block;
         }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            color: var(--text-light);
+        .navbar-brand span {
+            font-size: 25px;
+            font-weight: 300;
+            color: #2FE7FF;
+            /* Celeste */
+            letter-spacing: 0.5px;
         }
 
-        .welcome-text {
-            color: var(--accent-blue);
-            font-size: 1rem;
-            margin-bottom: 30px;
+        .nav-right-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
         }
 
-        .btn-action {
-            display: inline-block;
-            width: 100%;
-            background-color: var(--accent-blue);
-            color: var(--bg-main);
+        .nav-links-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links-menu a {
+            color: #98A9C4;
             text-decoration: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
-        .btn-action:hover {
-            background-color: var(--text-light);
-            transform: translateY(-2px);
+        .nav-links-menu a.active {
+            color: #2FE7FF;
+            /* Celeste activo */
+            font-weight: 700;
         }
 
-        .logout-form {
-            margin-top: 10px;
+        .nav-links-menu a:hover {
+            color: #FFFFFF;
         }
 
         .btn-logout {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            background: transparent;
+            border: 1px solid #2FE7FF;
+            /* Celeste */
+            color: #2FE7FF;
+            padding: 8px 16px;
+            font-size: 14px;
             font-weight: 500;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .btn-logout:hover {
-            border-color: var(--accent-blue);
-            color: var(--text-light);
-            background-color: rgba(152, 169, 196, 0.05);
+            background-color: #2FE7FF;
+            color: #04114A;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            margin-bottom: 30px;
+        }
+
+        .header-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .header-section p {
+            font-size: 16px;
+            color: #64748B;
+            margin: 0;
+        }
+
+        .table-responsive {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #F1F5F9;
+            color: #04114A;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 16px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #334155;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        .query-box {
+            background-color: #04114A;
+            color: #35FF57;
+            /* Verde Neón de código */
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-method {
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 4px;
+            color: white;
+            display: inline-block;
+        }
+
+        .bg-post {
+            background-color: #0F63FF;
+        }
+
+        .bg-get {
+            background-color: #16A34A;
+        }
+
+        /* 🛡️ ARREGLO DE PAGINACIÓN COMPACTA Y PEQUEÑA */
+        .pagination-wrapper {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pagination-wrapper ul.pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 6px;
+            gap: 5px;
+            margin: 0;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item span,
+        .pagination-wrapper ul.pagination li.page-item a {
+            display: block;
+            padding: 8px 14px;
+            font-size: 14px;
+            color: #04114A;
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item a:hover {
+            background-color: #F1F5F9;
+            border-color: #CBD5E1;
+            color: #0F63FF;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item.active span {
+            background-color: #0F63FF !important;
+            color: #FFFFFF !important;
+            border-color: #0F63FF !important;
+            font-weight: 700;
+        }
+
+        .pagination-wrapper ul.pagination li.page-item.disabled span {
+            color: #94A3B8;
+            background-color: #F8FAFC;
+            border-color: #E2E8F0;
+            cursor: not-allowed;
+        }
+
+        /* 🚀 NUEVOS COMPONENTES ADAPTADOS PARA EL CONTENIDO DEL DASHBOARD */
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .dashboard-card {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+
+        .dashboard-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #04114A;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-avanta {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #0F63FF; /* Azul Eléctrico */
+            color: #FFFFFF;
+            border: 1px solid #0F63FF;
+        }
+
+        .btn-primary:hover {
+            background-color: #04114A; /* Azul Profundo */
+            border-color: #04114A;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #04114A;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-secondary:hover {
+            background-color: #F1F5F9;
+            border-color: #94A3B8;
+        }
+
+        .mode-badge {
+            background-color: #FFFBEB; /* Fondo ámbar suave de alerta */
+            color: #B45309;            /* Texto marrón de alerta */
+            border: 1px solid #FDE68A;
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-card">
-        <h1>Hola, {{ auth()->user()->name }} 👋</h1>
-        <p class="welcome-text">Ya estás dentro del sistema.</p>
 
-        <p><a href="{{ route('asistencias') }}" class="btn-action">Crear caso de asistencia</a></p>
+    <!-- Nueva Navbar Unificada y Logotipo Ampliado -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Logotipo Avanta">
+            @role('admin') <span>| Panel</span> @endrole
+        </div>
+        
+        <div class="nav-right-container">
+            <div class="nav-links-menu">
+                <a href="{{ route('dashboard') }}" class="{{ Request::is('dashboard') ? 'active' : '' }}">Inicio</a>
+                @role('admin')
+                    <a href="{{ route('asistencias') }}">Solicitar Asistencia</a>
+                    <a href="{{ route('admin.usuarios') }}">Usuarios</a>
+                    <a href="{{ route('admin.bitacora') }}">Bitácora SQL</a>
+                @endrole
+            </div>
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
 
-        <form method="POST" action="/logout" class="logout-form">
-            @csrf
-            <button type="submit" class="btn-logout">Cerrar sesión</button>
-        </form>
+    <!-- Área de Contenido Principal -->
+    <div class="main-content">
+        <div class="dashboard-card">
+            <h2>Hola, {{ Auth::user()->name }} 👋</h2>
+
+            <div class="actions-container">
+                @role('admin')
+                    <a href="{{ route('asistencias') }}" class="btn-avanta btn-primary">
+                        Crear / Solicitar Asistencia
+                    </a>
+                    <a href="{{ route('admin.usuarios') }}" class="btn-avanta btn-secondary">
+                        Ir al Panel de Control
+                    </a>
+                @else
+                    <div class="mode-badge">
+                        Tu cuenta se encuentra en modo de lectura. Solicita autorización con el administrador para activar la creación de asistencias.
+                    </div>
+                @endrole
+            </div>
+        </div>
     </div>
+
 </body>
 </html>

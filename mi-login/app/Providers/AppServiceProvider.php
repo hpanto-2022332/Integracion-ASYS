@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Support\SeguroMock;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator; // ⬅️ 1. IMPORTAR ESTA LÍNEA
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Con SEGURO_API_MOCK=true, las llamadas a la API se responden con datos simulados.
-        if (config('services.seguro.mock')) {
-            SeguroMock::register();
-        }
+        // 🛡️ INFRAESTRUCTURA AVANTA: Forzar renderizado HTML limpio de paginación
+        Paginator::useBootstrapFive();
     }
 }

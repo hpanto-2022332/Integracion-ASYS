@@ -1,0 +1,297 @@
+/* ==========================================================================
+   🏢 AVANTA CORE SYSTEM - HOJA DE ESTILOS GLOBAL UNIFICADA
+   ========================================================================== */
+
+:root {
+    /* --- Colores Corporativos Oficiales Avanta --- */
+    --avanta-azul-profundo: #04114A;
+    --avanta-azul-electrico: #0F63FF;
+    --avanta-celeste: #2FE7FF;
+    --avanta-blanco: #FFFFFF;
+    --panel-bg: #111B54;
+    --border-color: #2F3A75;
+    --text-muted: #98A9C4;
+    --error-color: #ff6b6b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: var(--avanta-azul-profundo);
+    color: var(--avanta-blanco);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================================================
+   🛡️ NAVBAR CORPORATIVA GLOBAL UNIFICADA (RESPONSIVA)
+   ========================================================================== */
+.navbar {
+    background-color: var(--avanta-azul-profundo);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-brand img {
+    height: 54px; /* Escala aumentada oficial */
+    width: auto;
+    display: block;
+}
+
+.navbar-brand span {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--avanta-celeste);
+    letter-spacing: 0.5px;
+}
+
+.nav-right-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: nowrap;
+}
+
+.nav-links-menu {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-links-menu a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links-menu a.active {
+    color: var(--avanta-celeste);
+    font-weight: 700;
+}
+
+.nav-links-menu a:hover {
+    color: var(--avanta-blanco);
+}
+
+.btn-logout {
+    background: transparent;
+    border: 1px solid var(--avanta-celeste);
+    color: var(--avanta-celeste);
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: var(--avanta-celeste);
+    color: var(--avanta-azul-profundo);
+}
+
+/* ==========================================================================
+   📝 MAQUETACIÓN DE CONTENEDORES, CARDs Y TABLAS (MODO CLARO/OSCURO)
+   ========================================================================== */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Para vistas de fondo claro (Paneles Admin) */
+.bg-light-panel {
+    background-color: #F8FAFC !important;
+    color: var(--avanta-azul-profundo) !important;
+}
+
+.bg-light-panel td, .bg-light-panel th {
+    color: #334155;
+}
+
+.bg-light-panel h2 {
+    color: var(--avanta-azul-profundo);
+}
+
+.header-section {
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.header-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+.header-section p {
+    font-size: 16px;
+    color: #64748B;
+    margin: 0;
+}
+
+.table-responsive {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    background-color: #F1F5F9;
+    color: var(--avanta-azul-profundo);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 16px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+td {
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+tr:hover {
+    background-color: #F8FAFC;
+}
+
+/* ==========================================================================
+   🎛️ ESTRUCTURAS DE FORMULARIOS Y ELEMENTOS DE UI
+   ========================================================================== */
+.form-card {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.grid-form label {
+    font-size: 0.85rem;
+    color: var(--avanta-blanco);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px 12px;
+    background-color: rgba(4, 17, 74, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--avanta-blanco);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--avanta-celeste);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 9999px;
+}
+
+.badge-admin { background-color: #E0F2FE; color: var(--avanta-azul-electrico); }
+.badge-cliente { background-color: #DCFCE7; color: #15803D; }
+.flag-badge { background-color: #F1F5F9; color: var(--avanta-azul-profundo); padding: 4px 10px; font-size: 13px; border-radius: 4px; font-weight: 500; border: 1px solid #CBD5E1; display: inline-block; }
+
+.query-box { background-color: var(--avanta-azul-profundo); color: var(--avanta-verde); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; max-height: 120px; overflow-y: auto; white-space: pre-wrap; margin: 0; }
+.badge-method { padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; color: #FFFFFF; display: inline-block; }
+.bg-post { background-color: var(--avanta-azul-electrico); }
+.bg-get { background-color: #16A34A; }
+
+/* ==========================================================================
+   🛡️ INTERFAZ DE PAGINACIÓN BOOTSTRAP RE-ESTILIZADA (COMPACTA)
+   ========================================================================== */
+.pagination-wrapper {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-wrapper ul.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 6px;
+    gap: 5px;
+    margin: 0;
+}
+
+.pagination-wrapper ul.pagination li.page-item span,
+.pagination-wrapper ul.pagination li.page-item a {
+    display: block;
+    padding: 8px 14px;
+    font-size: 14px;
+    color: var(--avanta-azul-profundo);
+    background-color: var(--avanta-blanco);
+    border: 1px solid #E2E8F0;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination-wrapper ul.pagination li.page-item a:hover {
+    background-color: #F1F5F9;
+    border-color: #CBD5E1;
+    color: var(--avanta-azul-electrico);
+}
+
+.pagination-wrapper ul.pagination li.page-item.active span {
+    background-color: var(--avanta-azul-electrico) !important;
+    color: var(--avanta-blanco) !important;
+    border-color: var(--avanta-azul-electrico) !important;
+    font-weight: 700;
+}
