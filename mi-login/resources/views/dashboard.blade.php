@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avanta - Dashboard</title>
     <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
     <style>
-        /* Estilos alineados al Brandbook de Avanta */
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #F8FAFC;
             color: #04114A;
-            /* Azul Profundo */
             margin: 0;
             padding: 0;
         }
 
         .navbar {
             background-color: #04114A;
-            /* Azul Profundo */
             padding: 10px 30px;
             display: flex;
             justify-content: space-between;
@@ -34,7 +32,7 @@
         }
 
         .navbar-brand img {
-            height: 60px;
+            height: 65px;
             width: auto;
             display: block;
         }
@@ -43,7 +41,6 @@
             font-size: 25px;
             font-weight: 300;
             color: #2FE7FF;
-            /* Celeste */
             letter-spacing: 0.5px;
         }
 
@@ -68,7 +65,6 @@
 
         .nav-links-menu a.active {
             color: #2FE7FF;
-            /* Celeste activo */
             font-weight: 700;
         }
 
@@ -79,7 +75,6 @@
         .btn-logout {
             background: transparent;
             border: 1px solid #2FE7FF;
-            /* Celeste */
             color: #2FE7FF;
             padding: 8px 16px;
             font-size: 14px;
@@ -235,7 +230,6 @@
             cursor: not-allowed;
         }
 
-        /* 🚀 NUEVOS COMPONENTES ADAPTADOS PARA EL CONTENIDO DEL DASHBOARD */
         .main-content {
             max-width: 1200px;
             margin: 40px auto;
@@ -277,13 +271,13 @@
         }
 
         .btn-primary {
-            background-color: #0F63FF; /* Azul Eléctrico */
+            background-color: #0F63FF;
             color: #FFFFFF;
             border: 1px solid #0F63FF;
         }
 
         .btn-primary:hover {
-            background-color: #04114A; /* Azul Profundo */
+            background-color: #04114A;
             border-color: #04114A;
         }
 
@@ -299,8 +293,8 @@
         }
 
         .mode-badge {
-            background-color: #FFFBEB; /* Fondo ámbar suave de alerta */
-            color: #B45309;            /* Texto marrón de alerta */
+            background-color: #FFFBEB;
+            color: #B45309;
             border: 1px solid #FDE68A;
             padding: 16px 20px;
             border-radius: 6px;
@@ -311,22 +305,23 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Nueva Navbar Unificada y Logotipo Ampliado -->
+    <!-- barra de navegacion -->
     <nav class="navbar">
         <div class="navbar-brand">
             <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Logotipo Avanta">
             @role('admin') <span>| Panel</span> @endrole
         </div>
-        
+
         <div class="nav-right-container">
             <div class="nav-links-menu">
                 <a href="{{ route('dashboard') }}" class="{{ Request::is('dashboard') ? 'active' : '' }}">Inicio</a>
+                <a href="{{ route('asistencias') }}" class="{{ Request::is('asistencias*') ? 'active' : '' }}">Emitir Asistencia</a>
                 @role('admin')
-                    <a href="{{ route('asistencias') }}">Solicitar Asistencia</a>
-                    <a href="{{ route('admin.usuarios') }}">Usuarios</a>
-                    <a href="{{ route('admin.bitacora') }}">Bitácora SQL</a>
+                <a href="{{ route('admin.usuarios') }}" class="{{ Request::is('admin/usuarios*') ? 'active' : '' }}">Usuarios</a>
+                <a href="{{ route('admin.bitacora') }}" class="{{ Request::is('admin/bitacora*') ? 'active' : '' }}">Bitácora SQL</a>
                 @endrole
             </div>
             <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
@@ -336,27 +331,28 @@
         </div>
     </nav>
 
-    <!-- Área de Contenido Principal -->
+    <!-- Principal -->
     <div class="main-content">
         <div class="dashboard-card">
             <h2>Hola, {{ Auth::user()->name }} 👋</h2>
 
             <div class="actions-container">
                 @role('admin')
-                    <a href="{{ route('asistencias') }}" class="btn-avanta btn-primary">
-                        Crear / Solicitar Asistencia
-                    </a>
-                    <a href="{{ route('admin.usuarios') }}" class="btn-avanta btn-secondary">
-                        Ir al Panel de Control
-                    </a>
+                <a href="{{ route('asistencias') }}" class="btn-avanta btn-primary">
+                    Crear / Solicitar Asistencia
+                </a>
+                <a href="{{ route('admin.usuarios') }}" class="btn-avanta btn-secondary">
+                    Ir al Panel de Control
+                </a>
                 @else
-                    <div class="mode-badge">
-                        Tu cuenta se encuentra en modo de lectura. Solicita autorización con el administrador para activar la creación de asistencias.
-                    </div>
+                <div class="mode-badge">
+                    Tu cuenta se encuentra en modo de lectura. Solicita autorización con el administrador para activar la creación de asistencias.
+                </div>
                 @endrole
             </div>
         </div>
     </div>
 
 </body>
+
 </html>

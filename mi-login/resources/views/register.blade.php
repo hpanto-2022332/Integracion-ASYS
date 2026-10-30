@@ -6,25 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avanta - Crear cuenta</title>
 
-    <!-- Configuración del Favicon corporativo para reemplazar el globito del navegador -->
     <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
 
     <style>
         :root {
-            /* --- Colores Corporativos Oficiales (Pág. 15-16) --- */
             --avanta-azul-profundo: #04114A;
             --avanta-azul-electrico: #0F63FF;
             --avanta-celeste: #2FE7FF;
             --avanta-verde: #35FF57;
             --avanta-blanco: #FFFFFF;
 
-            /* --- Colores de UI de Soporte --- */
             --panel-bg: #111B54;
             --border-color: #2F3A75;
             --text-muted: #98A9C4;
             --error-color: #ff6b6b;
 
-            /* --- Tipografía (Pág. 18) --- */
             --font-avanta: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
@@ -47,7 +43,6 @@
             position: relative;
         }
 
-        /* --- Contenedor de la Marca (Solo Isotipo a Gran Escala - Pág. 12) --- */
         .brand-container {
             position: absolute;
             top: 40px;
@@ -56,7 +51,6 @@
             align-items: center;
         }
 
-        /* Envoltura del enlace para aplicar la animación interactiva del logo */
         .brand-container a {
             display: inline-block;
             transition: transform 0.2s ease-in-out;
@@ -74,7 +68,6 @@
             display: block;
         }
 
-        /* --- Tarjeta de Registro Compacta --- */
         .register-card {
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
@@ -199,14 +192,14 @@
 
 <body>
 
-    <!-- Identidad de Marca: El Isotipo limpio actúa como hipervínculo de retorno -->
+    <!-- isotipo de avanta -->
     <div class="brand-container">
         <a href="/">
             <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Avanta Isotipo" class="brand-logo">
         </a>
     </div>
 
-    <!-- Bloque de Registro Compacto -->
+    <!-- Registro -->
     <div class="register-card">
         <h1>Crear cuenta</h1>
 

@@ -18,10 +18,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
 
-    // Formulario operativo de asistencias e integración con el Gateway externo
+    // Formulario de emisión de asistencia – consume POST /assistance/sales/transaction
     Route::get('/asistencias', [AsistenciaController::class, 'form'])->name('asistencias');
-    Route::get('/asistencias/categorias/{plan}', [AsistenciaController::class, 'categorias'])->whereNumber('plan');
-    Route::post('/asistencias', [AsistenciaController::class, 'crear']);
+    Route::post('/asistencias/emitir', [AsistenciaController::class, 'emitir'])->name('asistencias.emitir');
+    Route::get('/asistencias/catalogo/countries', [AsistenciaController::class, 'catalogoPaises'])->name('asistencias.catalogo.countries');
+    Route::get('/asistencias/catalogo/countries/{countryId}/states', [AsistenciaController::class, 'catalogoEstados'])->name('asistencias.catalogo.states');
+    Route::get('/asistencias/catalogo/countries/{countryId}/states/{stateId}/districts', [AsistenciaController::class, 'catalogoDistritos'])->name('asistencias.catalogo.districts');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 

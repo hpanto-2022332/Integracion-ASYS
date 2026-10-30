@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avanta - Iniciar sesión</title>
-    
-    <!-- Configuración del Favicon corporativo para reemplazar el globito del navegador -->
+
     <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
-    
+
     <style>
         :root {
-            /* --- Colores Corporativos Oficiales (Pág. 15-16) --- */
             --avanta-azul-profundo: #04114A;
             --avanta-azul-electrico: #0F63FF;
             --avanta-celeste: #2FE7FF;
             --avanta-verde: #35FF57;
             --avanta-blanco: #FFFFFF;
 
-            /* --- Colores de UI de Soporte --- */
-            --panel-bg: #111B54;      
-            --border-color: #2F3A75;  
-            --text-muted: #98A9C4;    
-            --error-color: #ff6b6b;   
+            --panel-bg: #111B54;
+            --border-color: #2F3A75;
+            --text-muted: #98A9C4;
+            --error-color: #ff6b6b;
 
-            /* --- Tipografía (Pág. 18) --- */
             --font-avanta: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
@@ -46,7 +43,6 @@
             position: relative;
         }
 
-        /* --- Contenedor de la Marca (Solo Isotipo a Gran Escala) --- */
         .brand-container {
             position: absolute;
             top: 40px;
@@ -55,7 +51,6 @@
             align-items: center;
         }
 
-        /* Envoltura del enlace para aplicar la animación interactiva del logo */
         .brand-container a {
             display: inline-block;
             transition: transform 0.2s ease-in-out;
@@ -63,18 +58,16 @@
             line-height: 0;
         }
 
-        /* Efecto hover: se agranda un toque sutil (aprox 2px) */
         .brand-container a:hover {
             transform: scale(1.025);
         }
 
         .brand-logo {
-            height: 84px; /* Sincronizado a gran escala para máxima presencia visual */
+            height: 84px;
             width: auto;
             display: block;
         }
 
-        /* --- Tarjeta de Login Compacta --- */
         .login-card {
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
@@ -190,12 +183,12 @@
             text-decoration: underline;
         }
 
-        /* Ajuste responsivo optimizado para el isotipo aislado */
         @media (max-width: 768px) {
             body {
                 justify-content: flex-start;
                 padding-top: 180px;
             }
+
             .brand-container {
                 position: absolute;
                 top: 35px;
@@ -205,9 +198,10 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Identidad de Marca: El Isotipo limpio actúa como hipervínculo de retorno -->
+    <!-- logo -->
     <div class="brand-container">
         <a href="/">
             <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Avanta Isotipo" class="brand-logo">
@@ -224,8 +218,8 @@
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
-                @error('email') 
-                    <p class="error-message">{{ $message }}</p> 
+                @error('email')
+                <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -235,7 +229,7 @@
             </div>
 
             <label class="remember-group">
-                <input type="checkbox" name="remember"> 
+                <input type="checkbox" name="remember">
                 <span>Recordarme en este equipo</span>
             </label>
 
@@ -245,4 +239,5 @@
         <p class="register-link">¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate</a></p>
     </div>
 </body>
+
 </html>

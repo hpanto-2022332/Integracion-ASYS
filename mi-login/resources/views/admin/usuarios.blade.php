@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios - Avanta Admin</title>
+    <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
     <style>
         /* ==========================================================================
            🏢 AVANTA CORE SYSTEM - HOJA DE ESTILOS UNIFICADA E INTEGRADA
@@ -26,38 +28,38 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #F8FAFC; /* Fondo claro oficial para el panel de administración */
-            color: var(--avanta-azul-profundo);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: #F8FAFC;
+            color: #04114A;
+            margin: 0;
+            padding: 0;
         }
 
         /* 🛡️ NAVBAR CORPORATIVA GLOBAL UNIFICADA (FLEXBOX CORREGIDO) */
         .navbar {
             background-color: var(--avanta-azul-profundo);
             border-bottom: 1px solid var(--border-color);
-            padding: 12px 30px;
+            padding: 10px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 1px;
         }
 
         .navbar-brand img {
-            height: 54px; /* Escala aumentada oficial a 54px */
+            height: 65px;
             width: auto;
             display: block;
         }
 
         .navbar-brand span {
-            font-size: 22px;
+            font-size: 25px;
             font-weight: 300;
             color: var(--avanta-celeste);
             letter-spacing: 0.5px;
@@ -66,7 +68,7 @@
         .nav-right-container {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
         }
 
         .nav-links-menu {
@@ -101,6 +103,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: inherit;
         }
 
         .btn-logout:hover {
@@ -108,24 +111,21 @@
             color: var(--avanta-azul-profundo);
         }
 
-        /* 📝 CONTENEDOR Y MAQUETACIÓN DE LA TABLA */
+        /* 📝 CONTENEDOR Y MAQUETACIÓN EXACTA DE BITÁCORA SQL */
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
-            width: 100%;
         }
 
         .header-section {
             margin-bottom: 30px;
-            text-align: left;
         }
 
         .header-section h2 {
             font-size: 32px;
             font-weight: 700;
             margin: 0 0 10px 0;
-            color: var(--avanta-azul-profundo);
         }
 
         .header-section p {
@@ -140,7 +140,6 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             overflow: hidden;
             border: 1px solid #E2E8F0;
-            width: 100%;
         }
 
         table {
@@ -151,19 +150,20 @@
 
         th {
             background-color: #F1F5F9;
-            color: var(--avanta-azul-profundo);
+            color: #04114A;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             padding: 16px;
             text-transform: uppercase;
             border-bottom: 2px solid #E2E8F0;
         }
 
         td {
-            padding: 16px;
+            padding: 14px 16px;
             font-size: 14px;
             color: #334155;
             border-bottom: 1px solid #E2E8F0;
+            vertical-align: middle;
         }
 
         tr:last-child td {
@@ -184,9 +184,16 @@
             text-transform: capitalize;
         }
 
-        .badge-admin { background-color: #E0F2FE; color: var(--avanta-azul-electrico); }
-        .badge-cliente { background-color: #DCFCE7; color: #15803D; }
-        
+        .badge-admin {
+            background-color: #E0F2FE;
+            color: var(--avanta-azul-electrico);
+        }
+
+        .badge-cliente {
+            background-color: #DCFCE7;
+            color: #15803D;
+        }
+
         .flag-badge {
             background-color: #F1F5F9;
             color: var(--avanta-azul-profundo);
@@ -199,21 +206,24 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Navbar Corporativa Completa -->
+    <!--barra de navegacion -->
     <nav class="navbar">
         <div class="navbar-brand">
             <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Logotipo Avanta">
-            <span>| Panel</span>
+            @role('admin') <span>| Panel</span> @endrole
         </div>
-        
+
         <div class="nav-right-container">
             <div class="nav-links-menu">
-                <a href="{{ route('dashboard') }}">Inicio</a>
-                <a href="{{ route('asistencias') }}">Solicitar Asistencia</a>
-                <a href="{{ route('admin.usuarios') }}" class="active">Usuarios</a>
-                <a href="{{ route('admin.bitacora') }}">Bitácora SQL</a>
+                <a href="{{ route('dashboard') }}" class="{{ Request::is('dashboard') ? 'active' : '' }}">Inicio</a>
+                <a href="{{ route('asistencias') }}" class="{{ Request::is('asistencias*') ? 'active' : '' }}">Emitir Asistencia</a>
+                @role('admin')
+                <a href="{{ route('admin.usuarios') }}" class="{{ Request::is('admin/usuarios*') ? 'active' : '' }}">Usuarios</a>
+                <a href="{{ route('admin.bitacora') }}" class="{{ Request::is('admin/bitacora*') ? 'active' : '' }}">Bitácora SQL</a>
+                @endrole
             </div>
             <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                 @csrf
@@ -229,6 +239,20 @@
             <p>Monitoreo perimetral de cuentas registradas en la plataforma corporativa.</p>
         </div>
 
+        {{-- ✅ Flash messages de éxito / error --}}
+        @if(session('success'))
+        <div style="background:rgba(53,255,87,.12); border:1px solid #35FF57; color:#35FF57;
+                        padding:12px 18px; border-radius:8px; margin-bottom:18px; font-weight:600;">
+            {{ session('success') }}
+        </div>
+        @endif
+        @if(session('error'))
+        <div style="background:rgba(255,107,107,.12); border:1px solid #ff6b6b; color:#ff6b6b;
+                        padding:12px 18px; border-radius:8px; margin-bottom:18px; font-weight:600;">
+            {{ session('error') }}
+        </div>
+        @endif
+
         <div class="table-responsive">
             <table>
                 <thead>
@@ -243,37 +267,37 @@
                 </thead>
                 <tbody>
                     @foreach($usuarios as $usuario)
-                        <tr>
-                            <td style="font-weight: 500;">{{ $usuario->name }}</td>
-                            <td>{{ $usuario->email }}</td>
-                            <td>
-                                <span class="flag-badge">
-                                    {{ $usuario->pais ?? 'Guatemala' }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($usuario->hasRole('admin'))
-                                    <span class="badge badge-admin">Administrador</span>
-                                @else
-                                    <span class="badge badge-cliente">Cliente</span>
-                                @endif
-                            </td>
-                            <td>{{ $usuario->created_at->timezone('America/Guatemala')->format('d/m/Y H:i') }}</td>
-                            
-                            <!-- Control operativo de roles -->
-                            <td style="text-align: center;">
-                                @if($usuario->id !== Auth::id())
-                                    <form action="{{ route('admin.usuarios.cambiarRol', $usuario->id) }}" method="POST" style="margin: 0; display: inline;">
-                                        @csrf
-                                        <button type="submit" class="btn-logout" style="font-size: 12px; padding: 6px 12px; border-color: #0F63FF; color: #0F63FF; font-weight: bold; background: transparent; cursor: pointer; border-radius: 4px; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#0F63FF'; this.style.color='#FFFFFF'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#0F63FF'">
-                                            Hacer {{ $usuario->hasRole('admin') ? 'Cliente' : 'Admin' }}
-                                        </button>
-                                    </form>
-                                @else
-                                    <span style="color: #98A9C4; font-size: 13px; font-style: italic;">Sesión Activa</span>
-                                @endif
-                            </td>
-                        </tr>
+                    <tr>
+                        <td style="font-weight: 500;">{{ $usuario->name }}</td>
+                        <td>{{ $usuario->email }}</td>
+                        <td>
+                            <span class="flag-badge">
+                                {{ $usuario->pais ?? 'Guatemala' }}
+                            </span>
+                        </td>
+                        <td>
+                            @if($usuario->hasRole('admin'))
+                            <span class="badge badge-admin">Administrador</span>
+                            @else
+                            <span class="badge badge-cliente">Cliente</span>
+                            @endif
+                        </td>
+                        <td>{{ $usuario->created_at->timezone('America/Guatemala')->format('d/m/Y H:i') }}</td>
+
+                        <!-- Control operativo de roles -->
+                        <td style="text-align: center;">
+                            @if($usuario->id !== Auth::id())
+                            <form action="{{ route('admin.usuarios.cambiarRol', $usuario->id) }}" method="POST" style="margin: 0; display: inline;">
+                                @csrf
+                                <button type="submit" class="btn-logout" style="font-size: 12px; padding: 6px 12px; border-color: #0F63FF; color: #0F63FF; font-weight: bold; background: transparent; cursor: pointer; border-radius: 4px; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#0F63FF'; this.style.color='#FFFFFF'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#0F63FF'">
+                                    Hacer {{ $usuario->hasRole('admin') ? 'Cliente' : 'Admin' }}
+                                </button>
+                            </form>
+                            @else
+                            <span style="color: #98A9C4; font-size: 13px; font-style: italic;">Sesión Activa</span>
+                            @endif
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -281,4 +305,5 @@
     </div>
 
 </body>
+
 </html>

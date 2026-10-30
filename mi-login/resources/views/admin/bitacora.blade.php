@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitácora de Auditoría - Avanta Admin</title>
+    <link rel="icon" type="image/png" href="{{ asset('imagenes/logo_AVANTA.png') }}">
     <style>
         /* Estilos alineados al Brandbook de Avanta */
         body {
@@ -33,7 +34,7 @@
         }
 
         .navbar-brand img {
-            height: 60px;
+            height: 65px;
             width: auto;
             display: block;
         }
@@ -166,6 +167,43 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
+        .badge-rol {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-rol.admin {
+            background-color: #0F63FF;
+            color: #fff;
+        }
+
+        .badge-rol.cliente {
+            background-color: #16A34A;
+            color: #fff;
+        }
+
+        .badge-rol.default {
+            background-color: #64748B;
+            color: #fff;
+        }
+
+        .badge-pais {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            background-color: #F1F5F9;
+            color: #04114A;
+            border: 1px solid #CBD5E1;
+            margin-top: 3px;
+        }
+
         .badge-method {
             padding: 4px 8px;
             font-size: 11px;
@@ -241,14 +279,17 @@
     <nav class="navbar">
         <div class="navbar-brand">
             <img src="{{ asset('imagenes/logoAVANTA.png') }}" alt="Logotipo Avanta">
-            <span>| Panel</span>
+            @role('admin') <span>| Panel</span> @endrole
         </div>
 
         <div class="nav-right-container">
             <div class="nav-links-menu">
-                <a href="{{ route('asistencias') }}">Solicitar Asistencia</a>
-                <a href="{{ route('admin.usuarios') }}" class="{{ Request::is('admin/usuarios') ? 'active' : '' }}">Usuarios</a>
-                <a href="{{ route('admin.bitacora') }}" class="{{ Request::is('admin/bitacora') ? 'active' : '' }}">Bitácora SQL</a>
+                <a href="{{ route('dashboard') }}" class="{{ Request::is('dashboard') ? 'active' : '' }}">Inicio</a>
+                <a href="{{ route('asistencias') }}" class="{{ Request::is('asistencias*') ? 'active' : '' }}">Emitir Asistencia</a>
+                @role('admin')
+                <a href="{{ route('admin.usuarios') }}" class="{{ Request::is('admin/usuarios*') ? 'active' : '' }}">Usuarios</a>
+                <a href="{{ route('admin.bitacora') }}" class="{{ Request::is('admin/bitacora*') ? 'active' : '' }}">Bitácora SQL</a>
+                @endrole
             </div>
             <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                 @csrf
@@ -279,7 +320,20 @@
                     <tr>
                         <td>
                             <strong style="color: #04114A;">{{ $log->usuario_nombre ?? 'Sistema' }}</strong>
-                            <br><span style="color: #64748B; font-size: 12px;">IP: {{ $log->ip }}</span>
+                            <br>
+                            {{-- Rol del usuario --}}
+                            @php
+                            $rol = $log->user?->roles->first()?->name ?? null;
+                            @endphp
+                            @if($rol)
+                            <span class="badge-rol {{ $rol }}">{{ ucfirst($rol) }}</span>
+                            @endif
+                            {{-- País del usuario --}}
+                            @if($log->user?->pais)
+                            <span class="badge-pais">🌎 {{ $log->user->pais }}</span>
+                            @endif
+                            <br>
+                            <span style="color: #64748B; font-size: 12px;">IP: {{ $log->ip }}</span>
                         </td>
                         <td>
                             <span style="font-weight: 500;">{{ $log->accion }}</span>
@@ -291,10 +345,22 @@
                             </span>
                         </td>
                         <td>
-                            @if($log->detalles_query)
+                            @if(!empty($log->detalles_query) && !str_contains($log->detalles_query, 'Sin queries'))
                             <pre class="query-box">{{ $log->detalles_query }}</pre>
                             @else
-                            <span style="color: #94A3B8; font-style: italic; font-size: 13px;">Sin queries SQL ejecutados en este hilo.</span>
+                            @php
+                                $infoNoQuery = '';
+                                if (str_contains($log->url, 'asistencias/emitir')) {
+                                    $infoNoQuery = "[API REST] POST /assistance/sales/transaction\n[DESTINO] https://dev.apolo11.online/api/assistance/sales/transaction\n[ESTADO BD] Transacción enviada vía HTTP REST Client hacia aseguradora (Operación externa sin inyección SQL local)";
+                                } elseif (str_contains($log->url, 'catalogo') || str_contains($log->url, 'countries')) {
+                                    $infoNoQuery = "[API CATÁLOGO] GET " . parse_url($log->url, PHP_URL_PATH) . "\n[SERVICIO] Apolo11 REST API / Catálogo en memoria\n[ESTADO BD] Consulta procesada vía API externa (Sin acceso ni bloqueo a la base de datos local)";
+                                } elseif (str_contains($log->url, 'asistencias')) {
+                                    $infoNoQuery = "[RENDER BLADE] " . $log->metodo . " " . parse_url($log->url, PHP_URL_PATH) . "\n[INTERFAZ] Carga de componentes de vista y verificación de sesión\n[ESTADO BD] Solicitud resuelta sin queries SQL requeridos";
+                                } else {
+                                    $infoNoQuery = "[OPERACIÓN EN MEMORIA] " . $log->metodo . " " . parse_url($log->url, PHP_URL_PATH) . "\n[ESTADO BD] Proceso completado sin ejecutar queries SQL en este hilo";
+                                }
+                            @endphp
+                            <pre class="query-box" style="border-left: 3px solid #2FE7FF;">{{ $infoNoQuery }}</pre>
                             @endif
                         </td>
                         <td style="font-weight: 500;">
